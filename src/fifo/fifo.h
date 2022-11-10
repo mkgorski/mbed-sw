@@ -28,4 +28,4 @@ int fifo_peekc (fifo *f, elem_t *c);
 int fifo_get (fifo *f, elem_t *s, int n);
 int fifo_drop (fifo *f, int n);
 
-#endif /* _FIFO_H */_
+#endif /* _FIFO_H */
