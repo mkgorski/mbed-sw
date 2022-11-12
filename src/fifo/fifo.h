@@ -2,6 +2,7 @@
 #define _FIFO_H_
 
 #include <stdint.h>
+#include "mbed-common.h"
 
 #define elem_t uint8_t
 

@@ -1,14 +1,14 @@
 CC  = gcc
 SRC_DIR := ../src
 
-SRCS  = main.c fifo.c fifo_tests.c
+SRCS  = main.c fifo.c fifo_tests.c slist.c slist_tests.c
 OBJS = $(SRCS:.c=.o)
 
 CFLAGS   = -W -Wall -O0 -g3 --std=gnu99 -fgnu89-inline
-CFLAGS  += -I. -I"$(SRC_DIR)/fifo"
+CFLAGS  += -I. -I"$(SRC_DIR)" -I"$(SRC_DIR)/fifo" -I"$(SRC_DIR)/slist"
 
 
-VPATH = $(SRC_DIR)/fifo
+VPATH = $(SRC_DIR)/fifo:$(SRC_DIR)/slist
 
 .PHONY: all tests clean
 
