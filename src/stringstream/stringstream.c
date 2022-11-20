@@ -1,3 +1,4 @@
+#include <string.h>
 #include "stringstream.h"
 
 void ss_init(stringstream *ss, uint8_t *buf, int len)
@@ -41,6 +42,11 @@ int ostring_put(stringstream *ss, const uint8_t *s, int n)
   memcpy(ss->s + ss->p, s, n);
   ss->p += n; ss->n -= n;
   return n;
+}
+
+int ostring_bytes_left(stringstream *ss)
+{
+  return ss->n;
 }
 
 int istring_peek(stringstream *ss, uint8_t **c)
