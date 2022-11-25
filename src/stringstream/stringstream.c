@@ -67,6 +67,14 @@ int istring_load(stringstream *ss, uint8_t *s, int n)
   return n;
 }
 
+int istring_map(stringstream *ss, uint8_t *buf, int len)
+{
+  ss->p = len;
+  ss->n = 0;
+  ss->s = buf;
+  return len;
+}
+
 int istring_getc(stringstream *ss, uint8_t *c)
 {
   if (!ss->p) return 0;

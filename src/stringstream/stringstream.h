@@ -19,6 +19,7 @@ int ostring_put(stringstream *ss, const uint8_t *s, int n);
 int ostring_bytes_left(stringstream *ss);
 
 int istring_load(stringstream *ss, uint8_t *s, int n);
+int istring_map(stringstream *ss, uint8_t *s, int n);
 int istring_peek(stringstream *ss, uint8_t **c);
 int istring_getc(stringstream *ss, uint8_t *c);
 int istring_get16be(stringstream *ss, uint16_t *n);
