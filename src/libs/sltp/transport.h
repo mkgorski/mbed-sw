@@ -29,7 +29,9 @@ typedef struct transport_event_t {
 } transport_event_t;
 
 typedef struct sltp_transport_ctx_t {
+  void *handle;
   void *userdata;
+  int (*poll)(void);
   int (*write)(uint8_t *buf, uint32_t len);
   void (*event_cb)(transport_event_t *event, void *userdata);
 } sltp_transport_ctx_t;

@@ -22,6 +22,8 @@ int sltp_init(sltp_t *sltp, sltp_transport_ctx_t *transport)
 
 void sltp_poll(sltp_t *sltp)
 {
+  if (sltp->transport->poll)
+    sltp->transport->poll();
   proto_poll(sltp->proto);
 }
 

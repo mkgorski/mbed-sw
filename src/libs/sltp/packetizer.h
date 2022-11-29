@@ -8,7 +8,7 @@
 typedef struct sltp_packetizer_t {
   uint8_t ibuf[PACKETIZER_BUF_SIZE];
   uint32_t iptr;
-  uint8_t obuf[PACKETIZER_BUF_SIZE/2];
+  uint8_t obuf[PACKETIZER_BUF_SIZE];
   sltp_transport_ctx_t *transport;
   stringstream output;
   bool escaped;

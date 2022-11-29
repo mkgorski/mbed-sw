@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include "slist.h"
-#include "time.h"
+#include "timer.h"
 #include "transport.h"
 #include "packetizer.h"
 
@@ -37,6 +37,7 @@ typedef struct sltp_proto_t {
   slist_t waiting_list;
   int32_t sent_list_size;
   timer timeout;
+  timer keepalive_period;
   uint8_t in_cnt;
   uint8_t out_cnt;
   bool init;

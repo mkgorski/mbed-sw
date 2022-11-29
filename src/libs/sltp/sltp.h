@@ -4,7 +4,13 @@
 #include "transport.h"
 #include "proto.h"
 
-typedef void (*sltp_data_cb)(uint8_t *buf, uint32_t len, void *userdata);
+typedef enum {
+  SLTP_EVENT_CONNECTED,
+  SLTP_EVENT_DISCONNECTED,
+  SLTP_EVENT_DATA
+} sltp_event_type_t;
+
+typedef void (*sltp_data_cb)(sltp_event_type_t event_type, uint8_t *buf, uint32_t len, void *userdata);
 
 typedef struct sltp_t {
   sltp_data_cb user_cb;

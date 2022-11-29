@@ -74,7 +74,8 @@ void packetizer_poll_out(sltp_packetizer_t *self)
     log("uart tx failed. err=%d\n", ret);
     self->tx_ready = true;
   }
-  else if (ret == self->output.p) { // immediate send
+  else if (ret == self->output.p) {
+    // sent immediately
     ss_init(&self->output, self->obuf, sizeof(self->obuf));
     self->tx_ready = true;
   }

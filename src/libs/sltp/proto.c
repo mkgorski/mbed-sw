@@ -35,14 +35,20 @@ void proto_init(sltp_proto_t *self, sltp_transport_ctx_t *transport)
   slist_init(&self->waiting_list);
   self->init = true;
   timer_start(&self->timeout, 500);
+  timer_start(&self->keepalive_period, 200);
   packetizer_init(&self->packetizer, transport);
 }
 
 void proto_poll(sltp_proto_t *self)
 {
   if (timer_expired(&self->timeout)) {
-    timer_start(&self->timeout, 1000);
+    timer_restart(&self->timeout);
     proto_reset(self);
+  }
+
+  if (timer_expired(&self->keepalive_period)) {
+    timer_restart(&self->keepalive_period);
+    proto_send_keepalive(self);
   }
 
   proto_poll_out(self);
@@ -164,7 +170,9 @@ static void proto_reset(sltp_proto_t *self)
 
   if (self->connected) {
     self->connected = false;
-    log("sltp disconnected\n");
+
+    if (self->parent->user_cb)
+      self->parent->user_cb(SLTP_EVENT_DISCONNECTED, NULL, 0, self->parent->userdata);
   }
 
   self->in_cnt = 0;
@@ -226,12 +234,12 @@ static void proto_process(sltp_proto_t *self, sltp_packet_t *pkt)
 {
   if (pkt->len < 5) {
     log("sltp packet too short\n");
-    return;
+    goto _process_finish;
   }
 
   if (proto_checksum(self, pkt) != 0) {
     log("sltp invalid checksum\n");
-    return;
+    goto _process_finish;
   }
 
   switch (pkt->frame.type) {
@@ -244,9 +252,9 @@ static void proto_process(sltp_proto_t *self, sltp_packet_t *pkt)
     case SLTP_KEEPALIVE:
       if (!self->connected) {
         self->connected = true;
-        log("sltp connected\n");
+        if (self->parent->user_cb)
+          self->parent->user_cb(SLTP_EVENT_CONNECTED, NULL, 0, self->parent->userdata);
       }
-      proto_send_keepalive(self);
       timer_restart(&self->timeout);
       break;
     case SLTP_RETRY: {
@@ -262,6 +270,7 @@ static void proto_process(sltp_proto_t *self, sltp_packet_t *pkt)
       break;
   }
 
+_process_finish:
   if (pkt)
     alloc_free(pkt);
 }
@@ -309,7 +318,7 @@ static void proto_publish(sltp_proto_t *self, sltp_packet_t *pkt)
 {
   sltp_t *sltp = self->parent;
   if (sltp->user_cb) {
-    sltp->user_cb(&pkt->frame.payload[0], pkt->len - sizeof(sltp_frame_t) - 1, sltp->userdata);
+    sltp->user_cb(SLTP_EVENT_DATA, &pkt->frame.payload[0], pkt->len - sizeof(sltp_frame_t) - 1, sltp->userdata);
   }
 }
 
