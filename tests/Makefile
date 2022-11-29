@@ -8,10 +8,10 @@ SRCS  = main.c fifo.c fifo_tests.c \
 OBJS = $(SRCS:.c=.o)
 
 CFLAGS   = -W -Wall -O0 -g3 --std=gnu99 -fgnu89-inline -include hw.h
-CFLAGS  += -I. -I"$(SRC_DIR)" -I"$(SRC_DIR)/fifo" -I"$(SRC_DIR)/slist" -I"$(SRC_DIR)/dlist" -I"$(SRC_DIR)/alloc"
+CFLAGS  += -I. -I"$(SRC_DIR)" -I"$(SRC_DIR)/core"
 
 
-VPATH = $(SRC_DIR)/fifo:$(SRC_DIR)/slist:$(SRC_DIR)/dlist:$(SRC_DIR)/alloc
+VPATH = $(SRC_DIR)/core
 
 .PHONY: all tests clean
 
