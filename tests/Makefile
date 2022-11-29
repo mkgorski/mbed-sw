@@ -4,7 +4,8 @@ SRC_DIR := ../src
 SRCS  = main.c fifo.c fifo_tests.c \
 				slist.c slist_tests.c \
 				dlist.c dlist_tests.c \
-				alloc.c alloc_tests.c
+				alloc.c alloc_tests.c \
+				timer.c timer_tests.c
 OBJS = $(SRCS:.c=.o)
 
 CFLAGS   = -W -Wall -O0 -g3 --std=gnu99 -fgnu89-inline -include hw.h

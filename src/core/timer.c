@@ -1,4 +1,7 @@
-#include "time.h"
+#include "timer.h"
+
+// forward declaration
+uint32_t current_time(void);
 
 void timer_start (timer *ti, uint32_t interval)
 {

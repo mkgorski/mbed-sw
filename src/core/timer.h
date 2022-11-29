@@ -10,9 +10,6 @@ typedef struct timer {
 
 #define STOPPED_TIMER {0,-1}
 
-void time_init (int divider);
-void time_deinit (void);
-
 void timer_start (timer *ti, uint32_t interval);
 void timer_restart (timer *ti);
 void timer_advance (timer *ti);
