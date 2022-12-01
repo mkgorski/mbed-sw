@@ -39,12 +39,23 @@ void packetizer_init(sltp_packetizer_t *self, sltp_transport_ctx_t *transport)
   self->transport->event_cb = packetizer_event_cb;
 }
 
+static int __max(int a, int b)
+{
+  return (a > b) ? a : b;
+}
+
 bool packetizer_write(sltp_packetizer_t *self, uint8_t *buf, uint32_t len)
 {
   if (!self->tx_ready) return false;
 
-  // hack, assume 20 characters are enough for special chars
-  if (ostring_bytes_left(&self->output) < (int)(len + 20)) return false;
+  // hack, assume min(20, 1/8th buffer) characters are enough for special chars
+  int required_space = (int)(len + __max(20, len>>3));
+  if (required_space > PACKETIZER_BUF_SIZE) {
+    log("fatal: packetizer buffer too small!\n");
+    return false;
+  }
+
+  if (ostring_bytes_left(&self->output) < required_space) return false;
 
   for (uint32_t i=0; i<len; i++) {
     switch(buf[i]) {
@@ -60,7 +71,13 @@ bool packetizer_write(sltp_packetizer_t *self, uint8_t *buf, uint32_t len)
         ostring_putc(&self->output, buf[i]);
     }
   }
-  ostring_putc(&self->output, CHAR_END);
+
+  int ok = ostring_putc(&self->output, CHAR_END);
+  if (!ok) {
+    log("fatal: packetizer packet not complete!\n");
+    return false;
+  }
+
   return true;
 }
 
