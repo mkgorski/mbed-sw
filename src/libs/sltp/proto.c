@@ -136,8 +136,14 @@ static sltp_packet_t *proto_raw_send(sltp_proto_t *self, sltp_packet_type type, 
   pkt->frame.payload[len] = proto_checksum(self, pkt);
   pkt->len++;
 
-  if (pkt->frame.type == SLTP_DATA) self->out_cnt++;
-  slist_append(&self->output_list, (node_t *)pkt);
+  if (pkt->frame.type == SLTP_DATA) {
+    self->out_cnt++;
+    slist_append(&self->output_list, (node_t *)pkt);
+  }
+  else {
+    slist_prepend(&self->output_list, (node_t *)pkt);
+  }
+
   return pkt;
 }
 
@@ -261,7 +267,7 @@ static void proto_process(sltp_proto_t *self, sltp_packet_t *pkt)
       sltp_packet_t *spkt = proto_find_and_remove_packet(&self->sent_list, pkt->frame.payload[0]);
       if (spkt) {
         self->sent_list_size--;
-        slist_append(&self->output_list, (node_t *)spkt);
+        slist_prepend(&self->output_list, (node_t *)spkt);
       }
       break;
     }
