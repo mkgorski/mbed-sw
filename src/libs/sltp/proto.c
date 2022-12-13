@@ -14,6 +14,7 @@ static sltp_packet_t *proto_find_and_remove_packet(slist_t *list, uint8_t cnt);
 static sltp_packet_t *proto_raw_send(sltp_proto_t *self, sltp_packet_type type, uint8_t *buf, uint32_t len);
 static sltp_packet_t *proto_send_keepalive(sltp_proto_t *self);
 static sltp_packet_t *proto_send_retry(sltp_proto_t *self, uint8_t cnt);
+static sltp_packet_t *proto_send_reset(sltp_proto_t *self);
 static bool proto_peek_waiting_list(sltp_proto_t *self);
 static void proto_reset(sltp_proto_t *self);
 static void proto_process(sltp_proto_t *self, sltp_packet_t *pkt);
@@ -37,6 +38,8 @@ void proto_init(sltp_proto_t *self, sltp_transport_ctx_t *transport)
   timer_start(&self->timeout, 500);
   timer_start(&self->keepalive_period, 200);
   packetizer_init(&self->packetizer, transport);
+
+  proto_send_reset(self);
 }
 
 void proto_poll(sltp_proto_t *self)
@@ -157,6 +160,11 @@ static sltp_packet_t *proto_send_retry(sltp_proto_t *self, uint8_t cnt)
   return proto_raw_send(self, SLTP_RETRY, &cnt, 1);
 }
 
+static sltp_packet_t *proto_send_reset(sltp_proto_t *self)
+{
+  return proto_raw_send(self, SLTP_RESET, NULL, 0);
+}
+
 static bool proto_peek_waiting_list(sltp_proto_t *self)
 {
   sltp_packet_t *pkt = proto_find_packet(&self->waiting_list, self->in_cnt + 1);
@@ -269,6 +277,10 @@ static void proto_process(sltp_proto_t *self, sltp_packet_t *pkt)
         self->sent_list_size--;
         slist_prepend(&self->output_list, (node_t *)spkt);
       }
+      break;
+    }
+    case SLTP_RESET: {
+      proto_reset(self);
       break;
     }
     default:

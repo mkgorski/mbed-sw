@@ -12,7 +12,8 @@ struct sltp_t;
 typedef enum {
   SLTP_DATA = 1,
   SLTP_KEEPALIVE,
-  SLTP_RETRY
+  SLTP_RETRY,
+  SLTP_RESET
 } sltp_packet_type;
 
 typedef struct __attribute__((packed,aligned(4))) sltp_frame_t {
