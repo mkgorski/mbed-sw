@@ -36,7 +36,7 @@ void proto_init(sltp_proto_t *self, sltp_transport_ctx_t *transport)
   slist_init(&self->waiting_list);
   self->init = true;
   timer_start(&self->timeout, 500);
-  timer_start(&self->keepalive_period, 200);
+  timer_start(&self->keepalive_period, 20);
   packetizer_init(&self->packetizer, transport);
 
   proto_send_reset(self);
@@ -50,7 +50,7 @@ void proto_poll(sltp_proto_t *self)
   }
 
   if (timer_expired(&self->keepalive_period)) {
-    timer_restart(&self->keepalive_period);
+    timer_start(&self->keepalive_period, 200);
     proto_send_keepalive(self);
   }
 
