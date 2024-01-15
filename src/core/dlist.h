@@ -28,5 +28,6 @@ dnode_t *dlist_get_head(dlist_t *list);
 dnode_t *dlist_get_tail(dlist_t *list);
 void dlist_remove(dlist_t *list, dnode_t *node);
 int dlist_find_and_remove(dlist_t *list, dnode_t *node);
+int dlist_insert_before(dlist_t *list, dnode_t *what, dnode_t *where);
 
 #endif /* _DLIST_H_ */

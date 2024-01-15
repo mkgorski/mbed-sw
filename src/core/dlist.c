@@ -104,3 +104,20 @@ int dlist_find_and_remove(dlist_t *list, dnode_t *node)
   }
   return 0;
 }
+
+// TODO: this is not unit tested
+int dlist_insert_before(dlist_t *list, dnode_t *what, dnode_t *where)
+{
+  if (where->prev) {
+    where->prev->next = what;
+    what->prev = where->prev;
+  }
+  else {
+    list->head = what;
+    what->prev = NULL;
+  }
+  what->next = where;
+  where->prev = what;
+  list->size++;
+  return 1;
+}

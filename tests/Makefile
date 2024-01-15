@@ -5,6 +5,7 @@ SRCS  = main.c fifo.c fifo_tests.c \
 				slist.c slist_tests.c \
 				dlist.c dlist_tests.c \
 				alloc.c alloc_tests.c \
+				alloc2.c alloc2_tests.c \
 				timer.c timer_tests.c \
 				stringstream.c stringstream_tests.c
 OBJS = $(SRCS:.c=.o)
