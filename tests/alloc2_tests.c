@@ -249,3 +249,23 @@ UTEST(alloc2, long_run_no_oom)
     ASSERT_LT(dlist_size(&pool1k.free), (uint32_t) 2);
   }
 }
+
+UTEST(alloc2, alloc_aligned_to_4)
+{
+  alloc2_init(&pool1k);
+
+  #define NO_ALLOCS 10
+  int sizes[NO_ALLOCS] = { 20, 1, 7, 67, 211, 128, 32, 16, 16, 29 };
+  void *ptrs[NO_ALLOCS];
+
+  for(int i = 0; i < NO_ALLOCS; i++) {
+    void *p = alloc2_get(sizes[i]);
+    int aligned = (unsigned long)p % 4;
+    ASSERT_EQ(aligned, 0);
+    ptrs[i] = p;
+  }
+
+  for(int i = 0; i < NO_ALLOCS; i++) {
+    alloc2_free(ptrs[i]);
+  }
+}
