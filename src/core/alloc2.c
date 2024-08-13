@@ -1,9 +1,9 @@
 #include "hw.h"
 #include "alloc2.h"
 
-#define ALIGN4(x) (((x) + 0x03) & ~0x03)
+#define ALIGN8(x) (((x) + 0x07) & ~0x07)
 #define MIN_ALLOC_SIZE 32
-#define CHUNK_OVERHEAD ALIGN4(offsetof(alloc2_pool_chunk_t, data))
+#define CHUNK_OVERHEAD ALIGN8(offsetof(alloc2_pool_chunk_t, data))
 
 static alloc2_pool_t *_pool;
 static uint32_t total_allocs;
@@ -37,7 +37,7 @@ void *alloc2_get(uint32_t size)
 {
   dnode_t *node;
 
-  size = ALIGN4(size);
+  size = ALIGN8(size);
   if (size < MIN_ALLOC_SIZE)
     size = MIN_ALLOC_SIZE;
   size += CHUNK_OVERHEAD;

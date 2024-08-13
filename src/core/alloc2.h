@@ -19,7 +19,7 @@ typedef struct alloc2_pool_chunk_t {
 } alloc2_pool_chunk_t;
 
 #define DEFINE_ALLOC2_MEMPOOL(name, _size) \
-  uint8_t _##name##_alloc_buffer[_size] __attribute__ ((aligned(4))); \
+  uint8_t _##name##_alloc_buffer[_size] __attribute__ ((aligned(8))); \
   alloc2_pool_t name = { .size = _size,  .buffer = _##name##_alloc_buffer }
 
 void alloc2_init(alloc2_pool_t *pool);
