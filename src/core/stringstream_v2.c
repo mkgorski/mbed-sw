@@ -101,7 +101,7 @@ int ss_get(stringstream *ss, uint8_t *s, int n)
 
 uint8_t *ss_raw_buf(stringstream *ss)
 {
-  return ss->s;
+  return &ss->s[ss->r];
 }
 
 int ss_rewind(stringstream *ss, int n)

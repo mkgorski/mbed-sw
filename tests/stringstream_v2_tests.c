@@ -117,3 +117,21 @@ UTEST(stringstream, rewind)
   ASSERT_EQ(ss_get(&ss, s, 4), 4);
   ASSERT_EQ(memcmp(s, "stda", 4), 0);
 }
+
+UTEST(stringstream, raw_access)
+{
+  stringstream ss;
+  uint8_t buf[8];
+  char *test_data = "Testdata";
+  int len = 8;
+
+  ss_init(&ss, buf, sizeof(buf));
+  ASSERT_EQ(ss_put(&ss, (uint8_t *)test_data, len), 8);
+
+  uint8_t *raw = ss_raw_buf(&ss);
+  ASSERT_EQ(memcmp(raw, test_data, len), 0);
+
+  ASSERT_EQ(ss_rewind(&ss, 4), 4);
+  raw = ss_raw_buf(&ss);
+  ASSERT_EQ(memcmp(raw, test_data + 4, len - 4), 0);
+}
