@@ -42,10 +42,10 @@ void *alloc2_get(uint32_t size)
     size = MIN_ALLOC_SIZE;
   size += CHUNK_OVERHEAD;
 
+  __disable_irq_save();
   DLIST_FOR_EACH(&_pool->free, node) {
     alloc2_pool_chunk_t *chk = (alloc2_pool_chunk_t *)node;
     if (chk->size + CHUNK_OVERHEAD >= size) {
-      __disable_irq();
       if ((int32_t)(chk->size - size) < MIN_ALLOC_SIZE) {
         dlist_remove(&_pool->free, node);
       }
@@ -54,11 +54,12 @@ void *alloc2_get(uint32_t size)
       }
       dlist_append(&_pool->taken, (dnode_t *)chk);
       total_allocs++;
-      __enable_irq();
+      __enable_irq_restore();
       return chk->data;
     }
   }
 
+  __enable_irq_restore();
   return NULL;
 }
 
@@ -68,7 +69,7 @@ void alloc2_free(void *ptr)
   uint8_t *data = (uint8_t *)ptr;
   alloc2_pool_chunk_t *freed = (alloc2_pool_chunk_t *)CONTAINER_OF(data, alloc2_pool_chunk_t, data);
 
-  __disable_irq();
+  __disable_irq_save();
   dlist_remove(&_pool->taken, &freed->node);
 
   DLIST_FOR_EACH(&_pool->free, node) {
@@ -84,7 +85,7 @@ void alloc2_free(void *ptr)
 _finish_free:
   total_frees++;
   _alloc_gc(freed);
-  __enable_irq(); 
+  __enable_irq_restore();
 }
 
 uint32_t alloc2_total_allocs(void)
