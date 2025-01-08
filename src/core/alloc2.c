@@ -3,7 +3,7 @@
 
 #define ALIGN8(x) (((x) + 0x07) & ~0x07)
 #define MIN_ALLOC_SIZE 32
-#define CHUNK_OVERHEAD ALIGN8(offsetof(alloc2_pool_chunk_t, data))
+#define CHUNK_OVERHEAD offsetof(alloc2_pool_chunk_t, data)
 
 static alloc2_pool_t *_pool;
 static uint32_t total_allocs;

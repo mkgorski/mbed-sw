@@ -5,8 +5,8 @@
 #include "alloc2.h"
 #include "utest.h"
 
-DEFINE_ALLOC2_MEMPOOL(pool1k, 1024 + 20);
-DEFINE_ALLOC2_MEMPOOL(pool4k, 4096 + 20);
+DEFINE_ALLOC2_MEMPOOL(pool1k, 1024 + 24);
+DEFINE_ALLOC2_MEMPOOL(pool4k, 4096 + 24);
 
 /* helpers */
 #define CHUNK_OVERHEAD offsetof(alloc2_pool_chunk_t, data)
@@ -250,7 +250,7 @@ UTEST(alloc2, long_run_no_oom)
   }
 }
 
-UTEST(alloc2, alloc_aligned_to_4)
+UTEST(alloc2, alloc_aligned_to_8)
 {
   alloc2_init(&pool1k);
 
@@ -260,7 +260,7 @@ UTEST(alloc2, alloc_aligned_to_4)
 
   for(int i = 0; i < NO_ALLOCS; i++) {
     void *p = alloc2_get(sizes[i]);
-    int aligned = (unsigned long)p % 4;
+    int aligned = (unsigned long)p % 8;
     ASSERT_EQ(aligned, 0);
     ptrs[i] = p;
   }
