@@ -7,7 +7,9 @@ SRCS  = main.c fifo.c fifo_tests.c \
 				alloc.c alloc_tests.c \
 				alloc2.c alloc2_tests.c \
 				timer.c timer_tests.c \
-				stringstream.c stringstream_tests.c
+				stringstream_v2.c stringstream_v2_tests.c \
+				# stringstream.c stringstream_tests.c
+
 OBJS = $(SRCS:.c=.o)
 
 CFLAGS   = -W -Wall -O0 -g3 --std=gnu99 -fgnu89-inline -include hw.h
