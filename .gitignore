@@ -1,2 +1,3 @@
 tests/*.d
 tests/*.o
+tests/tests
