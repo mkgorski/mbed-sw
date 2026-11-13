@@ -79,6 +79,24 @@ UTEST(alloc2, init)
 
   ASSERT_EQ(alloc2_total_allocs(), (uint32_t)0);
   ASSERT_EQ(alloc2_total_frees(), (uint32_t)0);
+  ASSERT_EQ(alloc2_total_alloc_failures(), (uint32_t)0);
+}
+
+UTEST(alloc2, alloc_failures)
+{
+  alloc2_init(&pool1k);
+
+  void *p0 = alloc2_get(1030);
+  ASSERT_EQ(p0, NULL);
+  ASSERT_EQ(alloc2_total_alloc_failures(), (uint32_t)1);
+
+  void *p1 = alloc2_get(32);
+  ASSERT_NE(p1, NULL);
+  ASSERT_EQ(alloc2_total_alloc_failures(), (uint32_t)1);
+  alloc2_free(p1);
+
+  alloc2_init(&pool1k);
+  ASSERT_EQ(alloc2_total_alloc_failures(), (uint32_t)0);
 }
 
 UTEST(alloc2, one_small)

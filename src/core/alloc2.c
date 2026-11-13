@@ -8,6 +8,7 @@
 static alloc2_pool_t *_pool;
 static uint32_t total_allocs;
 static uint32_t total_frees;
+static uint32_t total_alloc_failures;
 
 static int _alloc_gc(alloc2_pool_chunk_t *start);
 
@@ -31,6 +32,7 @@ void alloc2_init(alloc2_pool_t *pool)
 
   total_allocs = 0;
   total_frees = 0;
+  total_alloc_failures = 0;
 }
 
 void *alloc2_get(uint32_t size)
@@ -59,6 +61,7 @@ void *alloc2_get(uint32_t size)
     }
   }
 
+  total_alloc_failures++;
   __enable_irq_restore();
   return NULL;
 }
@@ -96,6 +99,11 @@ uint32_t alloc2_total_allocs(void)
 uint32_t alloc2_total_frees(void)
 {
   return total_frees;
+}
+
+uint32_t alloc2_total_alloc_failures(void)
+{
+  return total_alloc_failures;
 }
 
 static int _alloc_gc(alloc2_pool_chunk_t *start)

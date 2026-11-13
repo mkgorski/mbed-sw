@@ -33,5 +33,6 @@ int alloc2_gc(void);
 /* debug API */
 uint32_t alloc2_total_allocs(void);
 uint32_t alloc2_total_frees(void);
+uint32_t alloc2_total_alloc_failures(void);
 
 #endif /* _ALLOC2_H_ */
